@@ -19,8 +19,7 @@ const app = express()
 const client_id = process.env.CLIENT_ID
 const client_secret = process.env.CLIENT_SECRET
 
-// Docs
-let access_token = ''
+let access_token = process.env.ACCESS_TOKEN
 
 app.get('/', (req, res) => {
     const url = getAuthorizingURL(
@@ -31,7 +30,7 @@ app.get('/', (req, res) => {
 
     res.setHeader('Content-type','text/html')
 
-    const styles = getStyles(access_token)
+    const styles = getStyles(!!access_token)
 
     res.send(Buffer.from(getAuthMarkup(access_token, styles, url)))
 })
