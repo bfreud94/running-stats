@@ -1,5 +1,6 @@
 import express from 'express'
 import fetch from 'node-fetch'
+import cors from 'cors'
 import {
     getActivitiesURL,
     getAthleteInfoURL,
@@ -20,6 +21,10 @@ const client_id = process.env.CLIENT_ID
 const client_secret = process.env.CLIENT_SECRET
 
 let access_token = process.env.ACCESS_TOKEN
+
+app.use(cors({
+    origin: '*'
+}))
 
 app.get('/', (req, res) => {
     const url = getAuthorizingURL(
