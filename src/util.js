@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 export const getActivitiesURL = (access_token, page) => `https://www.strava.com/api/v3/athlete/activities?access_token=${access_token}&per_page=100&page=${page}`
 
-export const getAuthorizingURL = (scope, domain, client_id) => `https://www.strava.com/oauth/authorize?client_id=${client_id}&response_type=code&redirect_uri=${domain}/authorized&approval_prompt=force&scope=${scope}`
+export const getAuthorizingURL = (scope, domain, client_id) => `https://www.strava.com/oauth/authorize?client_id=${client_id}&response_type=code&redirect_uri=${domain}/api/authorized&approval_prompt=force&scope=${scope}`
 
 export const getAuthorizedURL = (client_id, client_secret, code, grant_type) =>
     `https://www.strava.com/oauth/token?client_id=${client_id}&client_secret=${client_secret}&code=${code}&grant_type=${grant_type}`
@@ -27,3 +27,97 @@ export const getAuthMarkup = (access_token, { button_style, div_style, header_st
         </div>
     `
 )
+
+export const getYearsMap = () => ({
+    '2010': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2011': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2012': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2013': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2014': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2015': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2016': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2017': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2018': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2019': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2020': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2021': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    },
+    '2022': {
+        runs: [],
+        totals: {
+            activities: 0,
+            distance: 0
+        }
+    }
+})
