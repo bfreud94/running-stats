@@ -1,25 +1,25 @@
-import 'dotenv/config'
+import { access_token } from './index.js'
 
-export const getActivitiesURL = (access_token, page) => `https://www.strava.com/api/v3/athlete/activities?access_token=${access_token}&per_page=100&page=${page}`
+export const getActivitiesURL = (page) => `https://www.strava.com/api/v3/athlete/activities?access_token=${access_token}&per_page=100&page=${page}`
 
 export const getAuthorizingURL = (scope, domain, client_id) => `https://www.strava.com/oauth/authorize?client_id=${client_id}&response_type=code&redirect_uri=${domain}/api/authorized&approval_prompt=force&scope=${scope}`
 
 export const getAuthorizedURL = (client_id, client_secret, code, grant_type) =>
     `https://www.strava.com/oauth/token?client_id=${client_id}&client_secret=${client_secret}&code=${code}&grant_type=${grant_type}`
 
-export const getAthleteInfoURL = (access_token) => `https://www.strava.com/api/v3/athlete?access_token=${access_token}`
+export const getAthleteInfoURL = () => `https://www.strava.com/api/v3/athlete?access_token=${access_token}`
 
-export const getAthleteStatsURL = (access_token, id) => `https://www.strava.com/api/v3/athletes/${id}/stats?access_token=${access_token}`
+export const getAthleteStatsURL = (id) => `https://www.strava.com/api/v3/athletes/${id}/stats?access_token=${access_token}`
 
-export const getStyles = (access_token) => ({
+export const getStyles = () => ({
     button_style: 'margin-left:20px',
     div_style: 'display:flex;align-items:center',
-    header_style: `color:${access_token ? 'green' : 'red'}`
+    header_style: `color:${!!access_token ? 'green' : 'red'}`
 })
 
 export const meterToMile = (meters) => meters / 1609.34
 
-export const getAuthMarkup = (access_token, { button_style, div_style, header_style }, url) => (
+export const getAuthMarkup = ({ button_style, div_style, header_style }, url) => (
     `
         <div style=${div_style}>
             <h3 style=${header_style}>${access_token ? 'Authorized' : 'Unauthorized'}</h3>
@@ -28,96 +28,14 @@ export const getAuthMarkup = (access_token, { button_style, div_style, header_st
     `
 )
 
-export const getYearsMap = () => ({
-    '2010': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
+export const getYearsMap = () => [...Array(new Date().getFullYear() - 2009).keys()]
+    .reduce((accumulator, currentValue) => ({
+        ...accumulator,
+        [currentValue + 2010]: {
+            activities: [],
+            totals: {
+                activities: 0,
+                distance: 0
+            }
         }
-    },
-    '2011': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2012': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2013': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2014': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2015': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2016': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2017': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2018': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2019': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2020': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2021': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    },
-    '2022': {
-        runs: [],
-        totals: {
-            activities: 0,
-            distance: 0
-        }
-    }
-})
+    }), {})

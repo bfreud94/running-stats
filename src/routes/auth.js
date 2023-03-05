@@ -2,6 +2,8 @@ import { Router } from 'express'
 import fetch from 'node-fetch'
 import { getAuthorizedURL } from '../util.js'
 
+import 'dotenv/config'
+
 const app = Router()
 
 const client_id = process.env.CLIENT_ID

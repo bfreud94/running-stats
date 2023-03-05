@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { getAuthMarkup, getAuthorizingURL, getStyles } from './util.js'
+import { getAuthMarkup, getAuthorizingURL, getStyles, getYearsMap } from './util.js'
 
 import authRoutes from './routes/auth.js'
 import activitiesRoutes from './routes/activities.js'
@@ -24,14 +24,14 @@ app.get('/', (req, res) => {
         process.env.NODE_ENV === 'development' ? process.env.LOCAL_DOMAIN : process.env.DOMAIN,
         client_id
     )
-
+    
     access_token = req.app.get('access_token')
 
     res.setHeader('Content-type','text/html')
 
-    const styles = getStyles(!!access_token)
+    const styles = getStyles()
 
-    res.send(Buffer.from(getAuthMarkup(access_token, styles, url)))
+    res.send(Buffer.from(getAuthMarkup(styles, url)))
 })
 
 app.use('/api/', authRoutes)
