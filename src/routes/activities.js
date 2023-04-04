@@ -5,8 +5,6 @@ import { getCombinedActivities, getFilteredActivitiesByType, getTotalActivities 
 
 const require = createRequire(import.meta.url)
 
-const meterToMile = (meter) => (meter / 1609.34)
-
 const app = Router()
 
 app.get('/yearlyRuns', async (req, res) => {
@@ -26,7 +24,7 @@ app.get('/yearlyRuns', async (req, res) => {
         ...yearsMap,
         totals: {
             activities: filteredAndSortedRuns.length,
-            distance: parseFloat(meterToMile(totalDistance).toFixed(2))
+            distance: Math.round(100 * totalDistance) / 100
         }
     })
 })

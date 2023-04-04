@@ -36,6 +36,10 @@ export const getFilteredActivitiesByType = (activities, type) => {
     const yearsMap = getYearsMap()
     const filteredAndSortedRuns = activities
         .flat()
+        .map((activity) => ({
+            ...activity,
+            distance: meterToMile(activity.distance)
+        }))
         .filter((activity) => {
             const year = activity.start_date.substring(0, 4)
             if (activity.type === type) {
@@ -47,7 +51,7 @@ export const getFilteredActivitiesByType = (activities, type) => {
             return activity.type === type
         })
     Object.keys(yearsMap).forEach(year => {
-        yearsMap[year].totals.distance = parseFloat(meterToMile(yearsMap[year].totals.distance).toFixed(2))
+        yearsMap[year].totals.distance = Math.round(100 * yearsMap[year].totals.distance) / 100
     })
     return {
         filteredAndSortedRuns,

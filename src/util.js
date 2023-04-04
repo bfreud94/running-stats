@@ -17,7 +17,7 @@ export const getStyles = () => ({
     header_style: `color:${!!access_token ? 'green' : 'red'}`
 })
 
-export const meterToMile = (meters) => meters / 1609.34
+export const meterToMile = (meters) => Math.round(100 * (meters / 1609.34)) / 100
 
 export const getAuthMarkup = ({ button_style, div_style, header_style }, url) => (
     `
