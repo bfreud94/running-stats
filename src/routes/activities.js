@@ -7,6 +7,7 @@ const require = createRequire(import.meta.url)
 
 const app = Router()
 
+
 app.get('/yearlyRuns', async (req, res) => {
     if (process.env.USE_STUB === 'true') {
         const stubbedData = require('../stubs/newData.json')
