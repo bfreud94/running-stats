@@ -7,9 +7,11 @@ const require = createRequire(import.meta.url)
 
 const app = Router()
 
-app.get('/yearlyRuns', async (req, res) => {
+app.get('/yearlyActivities', async (req, res) => {
+	const sport = req.query['sport']
+
     if (process.env.USE_STUB === 'true') {
-        const stubbedData = require('../stubs/newData.json')
+        const stubbedData = require(sport === 'Run' ? '../stubs/runData.json' : '../stubs/rideData.json')
         res.send(stubbedData)
         return
     }
@@ -18,12 +20,12 @@ app.get('/yearlyRuns', async (req, res) => {
     const totalActivities = await getTotalActivities()
 
     const runs = await getCombinedActivities(totalActivities, url)
-    const { filteredAndSortedRuns, totalDistance, yearsMap } = getFilteredActivitiesByType(runs, 'Run')
+    const { filteredAndSortedActivities, totalDistance, yearsMap } = getFilteredActivitiesByType(runs, sport)
 
     res.send({
         ...yearsMap,
         totals: {
-            activities: filteredAndSortedRuns.length,
+            activities: filteredAndSortedActivities.length,
             distance: Math.round(100 * totalDistance) / 100
         }
     })

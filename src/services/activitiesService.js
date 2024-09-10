@@ -34,27 +34,32 @@ export const getCombinedActivities = async (totalActivities, url) => {
 export const getFilteredActivitiesByType = (activities, type) => {
     let totalDistance = 0
     const yearsMap = getYearsMap()
-    const filteredAndSortedRuns = activities
+    const filteredAndSortedActivities = activities
         .flat()
         .map((activity) => ({
             ...activity,
             distance: meterToMile(activity.distance)
         }))
         .filter((activity) => {
-            const year = activity.start_date.substring(0, 4)
-            if (activity.type === type) {
-                yearsMap[year].activities.push(activity)
-                yearsMap[year].totals.activities++
-                yearsMap[year].totals.distance += activity.distance
-                totalDistance += activity.distance
-            }
-            return activity.type === type
+			if (activity.start_date) {
+				const year = activity.start_date.substring(0, 4)
+				if (activity.type === type) {
+					yearsMap[year].activities.push(activity)
+					yearsMap[year].totals.activities++
+					yearsMap[year].totals.distance += activity.distance
+					totalDistance += activity.distance
+				}
+				return activity.type === type
+			} else {
+				console.log(activity)
+				return false
+			}
         })
     Object.keys(yearsMap).forEach(year => {
         yearsMap[year].totals.distance = Math.round(100 * yearsMap[year].totals.distance) / 100
     })
     return {
-        filteredAndSortedRuns,
+        filteredAndSortedActivities,
         totalDistance,
         yearsMap
     }
