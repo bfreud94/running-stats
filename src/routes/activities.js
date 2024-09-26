@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url)
 const app = Router()
 
 app.get('/yearlyActivities', async (req, res) => {
-	const sport = req.query['sport']
+	const sport = req.query['sport'] || 'Run'
 
     if (process.env.USE_STUB === 'true') {
         const stubbedData = require(sport === 'Run' ? '../stubs/runData.json' : '../stubs/rideData.json')
