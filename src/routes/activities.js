@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import { getActivitiesURL } from '../util.js'
 import { createRequire } from 'module'
 import { getCombinedActivities, getFilteredActivitiesByType, getTotalActivities } from '../services/activitiesService.js'
+import { getActivitiesURL, getYearsMapAndTotals } from '../util.js'
 
 const require = createRequire(import.meta.url)
 
@@ -22,13 +22,9 @@ app.get('/yearlyActivities', async (req, res) => {
     const runs = await getCombinedActivities(totalActivities, url)
     const { filteredAndSortedActivities, totalDistance, yearsMap } = getFilteredActivitiesByType(runs, sport)
 
-    res.send({
-        ...yearsMap,
-        totals: {
-            activities: filteredAndSortedActivities.length,
-            distance: Math.round(100 * totalDistance) / 100
-        }
-    })
+	const response = getYearsMapAndTotals(filteredAndSortedActivities, totalDistance, yearsMap)
+	
+    res.send(response)
 })
 
 export default app

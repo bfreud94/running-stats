@@ -39,3 +39,13 @@ export const getYearsMap = () => [...Array(new Date().getFullYear() - 2009).keys
             }
         }
     }), {})
+
+export const getYearsMapAndTotals = (filteredAndSortedActivities, totalDistance, yearsMap) => {
+	return {
+		...yearsMap,
+		totals: {
+			activities: filteredAndSortedActivities.length,
+			distance: Math.round(100 * totalDistance) / 100
+		}
+	}
+}
