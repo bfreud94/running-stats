@@ -1,8 +1,8 @@
 import express from 'express'
 import cors from 'cors'
-import { getAuthMarkup, getAuthorizingURL, getStyles, getYearsMap } from './util.js'
-
+import { getAuthMarkup, getAuthorizingURL, getStyles } from './util.js'
 import authRoutes from './routes/auth.js'
+import dataRoutes from './routes/data.js'
 import activitiesRoutes from './routes/activities.js'
 
 import 'dotenv/config'
@@ -45,6 +45,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/', activitiesRoutes)
+app.use('/api/', dataRoutes)
 
 app.listen(port, () => {
     console.log(`Server started port on ${port}`)
