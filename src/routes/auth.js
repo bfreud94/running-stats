@@ -17,4 +17,8 @@ app.get('/authorized', async (req, res) => {
     res.redirect('/')
 })
 
+app.get('/access-token', async (req, res) => {
+	res.send({ access_token: req.app.get('access_token') })
+})
+
 export default app

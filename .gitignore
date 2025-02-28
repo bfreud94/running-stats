@@ -6,6 +6,7 @@ node_modules
 
 # Env
 .env
+.env.docker
 
 # Stubbed Data
 stubs/newData.json
