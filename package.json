@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "db:load": "gulp dbLoad",
     "dev": "nodemon --exec babel-node ./src/index.js",
     "start": "npx -p @babel/core -p @babel/node babel-node --presets @babel/preset-env ./src/index.js"
   },
@@ -16,8 +17,10 @@
     "@babel/node": "^7.13.0",
     "@babel/preset-env": "^7.13.5",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.4.7",
     "express": "^4.17.2",
+    "gulp": "^5.0.0",
+    "mysql2": "^3.12.0",
     "node-fetch": "^3.1.0",
     "nodemon": "^2.0.15"
   }

@@ -23,7 +23,7 @@ export const getAuthMarkup = ({ button_style, div_style, header_style }, url) =>
     `
         <div style=${div_style}>
             <h3 style=${header_style}>${access_token ? 'Authorized' : 'Unauthorized'}</h3>
-            <a href="${url}"><button style=${button_style}>Sign in</button></a>
+            <a href="${url}"><button ${access_token ? 'disabled' : ''} style=${button_style}>Sign in</button></a>
         </div>
     `
 )

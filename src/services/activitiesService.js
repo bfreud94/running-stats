@@ -51,7 +51,6 @@ export const getFilteredActivitiesByType = (activities, type) => {
 				}
 				return activity.type === type
 			} else {
-				console.log(activity)
 				return false
 			}
         })

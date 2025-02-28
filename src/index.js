@@ -12,7 +12,7 @@ const app = express()
 
 const client_id = process.env.CLIENT_ID
 
-export let access_token
+export let access_token = process.env.ACCESS_TOKEN
 
 app.use(cors({
     origin: '*'
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
         client_id
     )
     
-    access_token = req.app.get('access_token')
+    access_token = access_token || req.app.get('access_token')
 
     res.setHeader('Content-type','text/html')
 
@@ -37,7 +37,8 @@ app.get('/', (req, res) => {
 app.use('/api/', authRoutes)
 
 app.use((req, res, next) => {
-    if (!access_token) {
+	const isV2 = req.path.includes('activities')
+    if (!access_token && !isV2) {
         res.redirect('/')
         return
     }
