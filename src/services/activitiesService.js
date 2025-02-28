@@ -42,7 +42,7 @@ export const getFilteredActivitiesByType = (activities, type) => {
         }))
         .filter((activity) => {
 			if (activity.start_date) {
-				const year = activity.start_date.substring(0, 4)
+				const year = activity.start_date_local.substring(0, 4)
 				if (activity.type === type) {
 					yearsMap[year].activities.push(activity)
 					yearsMap[year].totals.activities++
