@@ -21,6 +21,25 @@ gulp.task('dbLoad', async (done) => {
 		const activitesToAdd = responseActivities
 			.filter(activity => activity.type === 'Run')
 			.filter(activity => !rows.some(row => row.id == activity.id))
+		
+		const activitiesToReplace = responseActivities
+			.filter(activity => activity.type === 'Run')
+			.filter(activity => rows.some(row => row.id == activity.id && row.name !== activity.name))
+		
+		const updateQuery = `
+			UPDATE runs
+			SET name = ?
+			WHERE id = ?
+		`
+
+		activitiesToReplace.forEach(async activity => {
+			const values = [
+				activity.name,
+				activity.id
+			]
+			
+			await connection.execute(updateQuery, values)
+		})
 
 		activitesToAdd.forEach(async activity => {
 			const activityDbto = {
