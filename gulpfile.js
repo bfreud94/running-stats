@@ -1,9 +1,16 @@
 import gulp from 'gulp'
-import { connect, disconnect } from './src/db.js'
-
 import 'dotenv/config'
 
+import { connect, disconnect } from './src/db/db.js'
+import { INSERT_QUERY, SELECT_QUERY, UPDATE_QUERY } from './src/gulp/queries.js'
+import { WRITE_NEW_ACTIVITIES_SEARCH_STRING } from './src/gulp/constants.js'
+
+import { getActivitiesToAdd, getActivitiesToReplace, getResponseActivities } from './src/gulp/api.js'
+import { getUpdateSearchString, writeNewActivitiesToSqlTemplate, writeUpdateActivitiesToSqlTemplate } from './src/gulp/writeToSqlTemplate.js'
+import { createActivityDto, getActivityDtoValues } from './src/gulp/dto.js'
+
 gulp.task('dbLoad', async (done) => {
+	
 	console.log('Loading database...')
 
 	// create logic to also load ride data
@@ -12,66 +19,34 @@ gulp.task('dbLoad', async (done) => {
 
 	try {
 		connection = await connect()
-		const [rows] = await connection.execute('SELECT * FROM runs')
-		const access_token = process.env.ACCESS_TOKEN
-		const url = `https://www.strava.com/api/v3/athlete/activities?access_token=${access_token}&per_page=50&page=1`
-		const response = await fetch(url)
-		const responseActivities = await response.json()
+		const [rows] = await connection.execute(SELECT_QUERY)
 
-		const activitesToAdd = responseActivities
-			.filter(activity => activity.type === 'Run')
-			.filter(activity => !rows.some(row => row.id == activity.id))
-		
-		const activitiesToReplace = responseActivities
-			.filter(activity => activity.type === 'Run')
-			.filter(activity => rows.some(row => row.id == activity.id && row.name !== activity.name))
-		
-		const updateQuery = `
-			UPDATE runs
-			SET name = ?
-			WHERE id = ?
-		`
+		const responseActivities = await getResponseActivities(process.env.ACCESS_TOKEN)
+		const activitesToAdd = getActivitiesToAdd(responseActivities, rows)
+		const activitiesToReplace = getActivitiesToReplace(responseActivities, rows)
 
 		activitiesToReplace.forEach(async activity => {
 			const values = [
 				activity.name,
 				activity.id
 			]
+
+			const oldActivityName = rows.find(row => row.id == activity.id).name
+			const searchString = getUpdateSearchString(activity, oldActivityName, rows)
+			writeUpdateActivitiesToSqlTemplate(activity, searchString, oldActivityName)
 			
-			await connection.execute(updateQuery, values)
+			console.log(`Updating activity with id: ${activity.id} on ${activity.start_date}`)
+			await connection.execute(UPDATE_QUERY, values)
 		})
 
-		activitesToAdd.forEach(async activity => {
-			const activityDbto = {
-				average_cadence: activity.average_cadence || 0,
-				average_heartrate: activity.average_heartrate || 0,
-				average_speed: activity.average_speed,
-				distance: Math.round(100 * (activity.distance / 1609.34)) / 100,
-				id: activity.id,
-				name: activity.name,
-				start_date: new Date(activity.start_date_local).toISOString().slice(0, 19).replace('T', ' '),
-				suffer_score: activity.suffer_score || 0,
-				time: activity.moving_time
-			}
+		activitesToAdd.forEach(async (activity, activityIndex) => {
+			const activityDbto = createActivityDto(activity)
+			const values = getActivityDtoValues(activityDbto)
 			
-			const insertQuery = `
-				INSERT INTO runs (average_cadence, average_heartrate, average_speed, distance, id, name, start_date, suffer_score, time)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-			`
-			
-			const values = [
-				activityDbto.average_cadence,
-				activityDbto.average_heartrate,
-				activityDbto.average_speed,
-				activityDbto.distance,
-				activityDbto.id,
-				activityDbto.name,
-				activityDbto.start_date,
-				activityDbto.suffer_score,
-				activityDbto.time
-			]
-			
-			await connection.execute(insertQuery, values)
+			console.log(`Adding activity with id: ${activityDbto.id} on ${activityDbto.start_date}`)
+			await connection.execute(INSERT_QUERY, values)
+
+			writeNewActivitiesToSqlTemplate(activityDbto, activityIndex, activitesToAdd, WRITE_NEW_ACTIVITIES_SEARCH_STRING)
 		})
 
 		await disconnect(connection)
