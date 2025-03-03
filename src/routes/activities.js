@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { createRequire } from 'module'
 import { getCombinedActivities, getFilteredActivitiesByType, getTotalActivities } from '../services/activitiesService.js'
 import { getActivitiesURL, getYearsMapAndTotals } from '../util.js'
-import { connect } from '../db.js'
+import { connect } from '../db/db.js'
 
 const require = createRequire(import.meta.url)
 

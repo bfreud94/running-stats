@@ -7,7 +7,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./strava.sql:/docker-entrypoint-initdb.d/strava.sql
+      - ./src/db/scripts/strava.sql:/docker-entrypoint-initdb.d/strava.sql
     networks:
       - app-network
     env_file:
