@@ -4,6 +4,7 @@ import { getAuthMarkup, getAuthorizingURL, getStyles } from './util.js'
 import authRoutes from './routes/auth.js'
 import dataRoutes from './routes/data.js'
 import activitiesRoutes from './routes/activities.js'
+import { logger } from './middleware/index.js'
 
 import 'dotenv/config'
 
@@ -17,6 +18,8 @@ export let access_token = process.env.ACCESS_TOKEN
 app.use(cors({
     origin: '*'
 }))
+
+app.use(logger)
 
 app.get('/', (req, res) => {
     const url = getAuthorizingURL(
